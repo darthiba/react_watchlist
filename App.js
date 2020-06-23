@@ -26,8 +26,7 @@ export default function App() {
     firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
         setUser(user.uid)
-        console.log(user.uid)
-        console.log(user)
+
 
 
       } else {
@@ -35,7 +34,7 @@ export default function App() {
     })
   }, [])
 
-  console.log(UserContext)
+
 
   return (
 

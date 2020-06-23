@@ -9,8 +9,8 @@ import firebase from 'firebase'
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default function Home({ route,navigation }) {
-    let { user } = route.params
+export default function Home({ route, navigation }) {
+    let { user, lastMovie } = route.params
     const [search, setText] = useState('')
     // const [user, setUser] = useState(navigation.context)
     const [data, setData] = useState([])
@@ -33,37 +33,26 @@ export default function Home({ route,navigation }) {
         },
     });
 
-    const getData = async () => {
-        try {
-            const db = firebase.firestore();
-            const user = 'NThiVL2ZjnQ808xhFXeCdrIOpPC3'
-            let response =  firebaseContext.getData(db, user)
 
-            if (response) {
-               
-                setData(response)
-            } else {console.log('else')} 
-        } catch (error) {
-            console.log(error.message)
-        }}
 
 
     React.useEffect(() => {
 
-if(user){
-        db.collection("movies").where('user', '==', user).get().then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                let data2 = doc.data()
-                data2.key = doc.id
-                movies.push(data2)
+        if (user) {
+            db.collection("movies").where('user', '==', user).get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    let data2 = doc.data()
+                    data2.key = doc.id
+                    movies.push(data2)
+
+                });
+
+                setData(movies)
+
 
             });
-            console.log(user)
-            setData(movies)
-
-           
-        });}
-    }, [user])
+        }
+    }, [lastMovie])
 
 
     const deleteButton = (item) => {
@@ -121,7 +110,7 @@ if(user){
                     style={{ height: 20, flex: 14, color: 'white' }}
                     placeholder="Busca de Filmes"
                     onChangeText={search => setText(search)}
-                    defaultValue={search}/>
+                    defaultValue={search} />
                 <View style={{ width: 30, height: 30, flex: 1, paddingLeft: 10 }} >
                     <Button title="+" color="#2BD601" onPress={() => navigation.navigate('Search', { title: search, user: user })}></Button>
                 </View>
