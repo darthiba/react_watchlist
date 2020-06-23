@@ -49,7 +49,7 @@ export default function Search({ route, navigation }) {
             .catch(function (error) {
                 console.error("Error adding document: ", error);
             });
-        navigation.navigate('Home')
+        navigation.navigate('Home', {user: user})
     }
     return (
         <View

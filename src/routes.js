@@ -1,5 +1,6 @@
 import React from 'react'
 import { Router, Stack, Scene, Tabs } from 'react-native-router-flux'
+import { useEffect, useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import firebase from 'firebase'
@@ -13,21 +14,21 @@ import Loading from './views/loading'
 
 export default function Routes(props) {
     const Stack = createStackNavigator()
-    let initialScreen = ''
-    firebase.auth().onAuthStateChanged(function (user) {
-        if (user) {
-            initialScreen = 'Login'
-        } else {
-            // User is signed out.
-            // ...
-            initialScreen = 'Login'
-        }
-    })
+    // const [initialScreen, setInitialScreen] = useState('')
+    // firebase.auth().onAuthStateChanged(function (user) {
+    //     if (user) {
+    //         setInitialScreen('Home')
+    //     } else {
+    //         // User is signed out.
+    //         // ...
+    //         setInitialScreen('Login')
+    //     }
+    // })
 
     return (
         <NavigationContainer>
             <Stack.Navigator
-                initialRouteName={'Home'}
+                initialRouteName={'Login'}
                 screenOptions={{
                     // headerShown: false
                 }}>

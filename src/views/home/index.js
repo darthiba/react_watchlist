@@ -1,21 +1,26 @@
 import React from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import { View, Text, FlatList, Button, StyleSheet, Image, TextInput, SearchBar, ImageBackground, KeyboardAvoidingView } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { FirebaseContext } from '../../../firebase'
 import useApi from '../../services/api'
 import firebase from 'firebase'
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default function Home({ navigation }) {
+export default function Home({ route,navigation }) {
+    let { user } = route.params
     const [search, setText] = useState('')
-    const [user, setUser] = useState('')
+    // const [user, setUser] = useState(navigation.context)
     const [data, setData] = useState([])
     const [buttonLabel, setButtonLabel] = useState('Gerar Filme do Dia');
+    const firebaseContext = useContext(FirebaseContext)
+
+    let movies = []
 
     const db = firebase.firestore();
-    let movies = []
+    // let movies = []
 
     const baseUrl = 'http://image.tmdb.org/t/p/w200/'
 
@@ -28,20 +33,24 @@ export default function Home({ navigation }) {
         },
     });
 
+    const getData = async () => {
+        try {
+            const db = firebase.firestore();
+            const user = 'NThiVL2ZjnQ808xhFXeCdrIOpPC3'
+            let response =  firebaseContext.getData(db, user)
+
+            if (response) {
+               
+                setData(response)
+            } else {console.log('else')} 
+        } catch (error) {
+            console.log(error.message)
+        }}
+
 
     React.useEffect(() => {
-        firebase.auth().onAuthStateChanged(function (user) {
-            if (user) {
-                setUser(user.uid)
-                console.log(user.uid)
-                console.log(user)
 
-            } else {
-            }
-        })
-    }, [])
-
-    React.useEffect(() => {
+if(user){
         db.collection("movies").where('user', '==', user).get().then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
                 let data2 = doc.data()
@@ -49,12 +58,12 @@ export default function Home({ navigation }) {
                 movies.push(data2)
 
             });
-
+            console.log(user)
             setData(movies)
 
            
-        });
-    }, [data])
+        });}
+    }, [user])
 
 
     const deleteButton = (item) => {
